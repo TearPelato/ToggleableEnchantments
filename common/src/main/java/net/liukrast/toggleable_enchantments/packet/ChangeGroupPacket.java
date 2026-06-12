@@ -6,22 +6,22 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-public record ChangeGroupPacket(Identifier enchantment, int group) implements CustomPacketPayload {
+public record ChangeGroupPacket(ResourceLocation enchantment, int group) implements CustomPacketPayload {
     public static final Type<ChangeGroupPacket> PACKET_TYPE = new Type<>(TEConstants.id("change_group"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ChangeGroupPacket> CODEC = StreamCodec.ofMember(ChangeGroupPacket::write, ChangeGroupPacket::new);
 
     public ChangeGroupPacket(RegistryFriendlyByteBuf buf) {
-        this(buf.readIdentifier(), buf.readInt());
+        this(buf.readResourceLocation(), buf.readInt());
     }
 
     public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeIdentifier(enchantment);
+        buf.writeResourceLocation(enchantment);
         buf.writeInt(group);
     }
 

@@ -7,7 +7,7 @@ import net.liukrast.toggleable_enchantments.registry.RegisterKeyMappings;
 import net.liukrast.toggleable_enchantments.screen.TEScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class TEClient {
                     var stack1 = mc.player.getItemBySlot(slot);
                     if(stack1.isEmpty()) continue;
                     ItemEnchantments groups = stack1.getOrDefault(RegisterDataComponents.ENCHANTMENT_GROUPS, ItemEnchantments.EMPTY);
-                    List<Identifier > list = groups.entrySet().stream().filter(entry -> entry.getIntValue() == finalI).map(holder -> access.getKey(holder.getKey().value())).filter(
+                    List<ResourceLocation > list = groups.entrySet().stream().filter(entry -> entry.getIntValue() == finalI).map(holder -> access.getKey(holder.getKey().value())).filter(
                             Objects::nonNull).toList();
                     if(!list.isEmpty()) TEServices.PLATFORM.send2S(new ToggleEnchantmentPacket(list, slot));
                 }

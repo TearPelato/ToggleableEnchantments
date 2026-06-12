@@ -7,19 +7,21 @@ import net.liukrast.toggleable_enchantments.platform.TEServices;
 import net.liukrast.toggleable_enchantments.registry.RegisterDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class TEScreen extends Screen {
     public static final ResourceLocation TEXTURE = TEConstants.id("textures/gui/toggleable_enchantments.png");
@@ -44,8 +46,8 @@ public class TEScreen extends Screen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         int leftPos = (this.width- IMAGE_W)>>1;
         int topPos = (this.height- IMAGE_H)>>1;
         guiGraphics.blit(TEXTURE, leftPos, topPos, 0, 0, IMAGE_W, IMAGE_H);
@@ -82,6 +84,8 @@ public class TEScreen extends Screen {
         if(mouseX >= leftPos + 112 && mouseX < leftPos + 134 && mouseY >= topPos + 17 && mouseY < topPos + 137) guiGraphics.renderTooltip(this.font, TOOLTIP, Optional.empty(), mouseX, mouseY);
         int k = (int)((scrollOffs/Math.max(list.size()-10, 1)) * 105);
         guiGraphics.blitSprite(SCROLLER, leftPos+156, topPos+18+k, 12, 13);
+
+        renderLabels(guiGraphics);
     }
 
     @Override
@@ -200,6 +204,16 @@ public class TEScreen extends Screen {
                 .stream()
                 .sorted(Comparator.comparing(e -> e.getKey().getKey().getRegisteredName()))
                 .toList();
+    }
+    /**
+     * @author Tier1234
+     * Beacuse of {@link Screen} don't have any renderLabel method this one is inspired by the one inside
+     * {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen}
+     * */
+    private void renderLabels(GuiGraphics graphics) {
+        int leftPos = (this.width - IMAGE_W)>>1;
+        int topPos = (this.height - IMAGE_H)>>1;
+        graphics.drawString(this.font,TITLE,leftPos + 7,topPos + 7, Color.DARK_GRAY.getRGB(), false);
     }
 
     @Override
