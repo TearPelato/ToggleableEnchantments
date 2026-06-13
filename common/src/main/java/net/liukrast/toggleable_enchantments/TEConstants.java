@@ -59,8 +59,8 @@ public class TEConstants {
         if(fDisabled.isEmpty()) stack.remove(RegisterDataComponents.DISABLED_ENCHANTMENTS);
         else stack.set(RegisterDataComponents.DISABLED_ENCHANTMENTS, fDisabled);
         if(player != null) {
-            if(!enabled1.isEmpty()) player.displayClientMessage(Component.translatable("toggleable_enchantments.enable", String.join(", ", enabled1), stack.getDisplayName()), false);
-            if(!disabled1.isEmpty()) player.displayClientMessage(Component.translatable("toggleable_enchantments.disable", String.join(", ", disabled1), stack.getDisplayName()), false);
+            if(!enabled1.isEmpty()) player.sendSystemMessage(Component.translatable("toggleable_enchantments.enable", String.join(", ", enabled1), stack.getDisplayName()));
+            if(!disabled1.isEmpty()) player.sendSystemMessage(Component.translatable("toggleable_enchantments.disable", String.join(", ", disabled1), stack.getDisplayName()));
         }
     }
 }

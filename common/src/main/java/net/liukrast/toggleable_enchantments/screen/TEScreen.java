@@ -7,7 +7,7 @@ import net.liukrast.toggleable_enchantments.platform.TEServices;
 import net.liukrast.toggleable_enchantments.registry.RegisterDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -22,11 +22,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
-import org.lwjgl.system.NonnullDefault;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
-@NonnullDefault
 public class TEScreen extends Screen {
     private static final Identifier TEXTURE = TEConstants.id("textures/gui/toggleable_enchantments.png");
     private static final Identifier BUTTON = TEConstants.id("toggle_button");
@@ -48,17 +48,18 @@ public class TEScreen extends Screen {
         super(TITLE);
     }
 
+
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
         int leftPos = (this.width- IMAGE_W)>>1;
         int topPos = (this.height- IMAGE_H)>>1;
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos, topPos, 0, 0, IMAGE_W, IMAGE_H, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos, topPos, 0, 0, IMAGE_W, IMAGE_H, 256, 256);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
         int leftPos = (this.width-IMAGE_W)>>1;
         int topPos = (this.height-IMAGE_H)>>1;
         int j = 0;
@@ -75,10 +76,10 @@ public class TEScreen extends Screen {
             if(level <= 0) continue;
             var comp = Enchantment.getFullname(holder, level).plainCopy().withStyle(ChatFormatting.WHITE);
             boolean hovered = mouseX >= leftPos + IMAGE_W - BUTTON_W - BUTTON_OFFSET && mouseX < leftPos + IMAGE_W - BUTTON_OFFSET && mouseY >= topPos + j*12 + TOP_OFFSET && mouseY < topPos + j*12 + 8 + TOP_OFFSET;
-            guiGraphics.drawString(this.font, comp, leftPos + 9, topPos + j*12 + TOP_OFFSET, -1);
-            guiGraphics.drawString(this.font, group == 0 ? "-" : String.valueOf(group), leftPos + 120, topPos + j*12 + TOP_OFFSET, -1);
+            graphics.text(this.font, comp, leftPos + 9, topPos + j*12 + TOP_OFFSET, -1);
+            graphics.text(this.font, group == 0 ? "-" : String.valueOf(group), leftPos + 120, topPos + j*12 + TOP_OFFSET, -1);
             if(!holder.is(TEConstants.WHITELIST) && holder.is(TEConstants.BLACKLIST)) continue;
-            guiGraphics.blitSprite(
+            graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
                     BUTTON,
                     32, 16,
@@ -92,10 +93,10 @@ public class TEScreen extends Screen {
 
 
         int k = (int)(((float)scrollOffs / Math.max(list.size() - 10, 1)) * 105);
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER, leftPos + 156, topPos + 18 + k, 12, 13);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER, leftPos + 156, topPos + 18 + k, 12, 13);
 
         if(mouseX >= leftPos + 112 && mouseX < leftPos + 134 && mouseY >= topPos + 17 && mouseY < topPos + 137) {
-            guiGraphics.renderTooltip(
+            graphics.tooltip(
                     this.font,
                     TOOLTIP.stream()
                             .map(c -> ClientTooltipComponent.create(c.getVisualOrderText()))
@@ -106,6 +107,8 @@ public class TEScreen extends Screen {
                     null
             );
         }
+
+        renderLabels(graphics);
     }
 
     @Override
@@ -200,6 +203,17 @@ public class TEScreen extends Screen {
                 .stream()
                 .sorted(Comparator.comparing(e -> e.getKey().getKey().getRegisteredName()))
                 .toList();
+    }
+
+    /**
+     * @author Tier1234
+     * Beacuse of {@link Screen} don't have any renderLabel method this one is inspired by the one inside
+     * {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen}
+     * */
+    private void renderLabels(GuiGraphicsExtractor graphics) {
+        int leftPos = (this.width - IMAGE_W)>>1;
+        int topPos = (this.height - IMAGE_H)>>1;
+        graphics.text(this.font,TITLE,leftPos + 7,topPos + 7, Color.DARK_GRAY.getRGB(), false);
     }
 
     @Override

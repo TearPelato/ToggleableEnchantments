@@ -7,8 +7,8 @@ import net.liukrast.toggleable_enchantments.packet.ToggleEnchantmentPacket;
 
 public class RegisterNetworking {
     public static void register() {
-        PayloadTypeRegistry.playC2S().register(ToggleEnchantmentPacket.PACKET_TYPE, ToggleEnchantmentPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(ChangeGroupPacket.PACKET_TYPE, ChangeGroupPacket.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ToggleEnchantmentPacket.PACKET_TYPE, ToggleEnchantmentPacket.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ChangeGroupPacket.PACKET_TYPE, ChangeGroupPacket.CODEC);
     }
 
     public static void registerServer() {

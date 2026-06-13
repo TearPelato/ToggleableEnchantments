@@ -3,7 +3,7 @@ package net.liukrast.toggleable_enchantments;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.liukrast.toggleable_enchantments.registry.RegisterDataComponents;
 import net.liukrast.toggleable_enchantments.registry.RegisterKeyMappings;
 import net.liukrast.toggleable_enchantments.registry.RegisterNetworking;
@@ -17,7 +17,7 @@ public class ToggleableEnchantments implements ModInitializer, ClientModInitiali
     public void onInitializeClient() {
         Set<KeyMapping> keyMappings = new HashSet<>();
         RegisterKeyMappings.register(keyMappings);
-        keyMappings.forEach(KeyBindingHelper::registerKeyBinding);
+        keyMappings.forEach(KeyMappingHelper::registerKeyMapping);
         ClientTickEvents.END_CLIENT_TICK.register(client -> TEClient.onClientTick());
     }
 

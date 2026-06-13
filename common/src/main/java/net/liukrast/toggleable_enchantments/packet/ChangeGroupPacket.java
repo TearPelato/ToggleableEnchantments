@@ -14,9 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import org.lwjgl.system.NonnullDefault;
 
-@NonnullDefault
 public record ChangeGroupPacket(Identifier enchantment, int group) implements CustomPacketPayload {
     public static final Type<ChangeGroupPacket> PACKET_TYPE = new Type<>(TEConstants.id("change_group"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ChangeGroupPacket> CODEC = StreamCodec.ofMember(ChangeGroupPacket::write, ChangeGroupPacket::new);

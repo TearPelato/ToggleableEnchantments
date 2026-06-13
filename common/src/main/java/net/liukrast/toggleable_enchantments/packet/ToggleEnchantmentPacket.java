@@ -12,12 +12,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import org.lwjgl.system.NonnullDefault;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NonnullDefault
 public record ToggleEnchantmentPacket(List<Identifier> enchantment, EquipmentSlot slot) implements CustomPacketPayload {
     public static final Type<ToggleEnchantmentPacket> PACKET_TYPE = new Type<>(TEConstants.id("toggle_enchantment"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ToggleEnchantmentPacket> CODEC = StreamCodec.ofMember(ToggleEnchantmentPacket::write, ToggleEnchantmentPacket::new);
