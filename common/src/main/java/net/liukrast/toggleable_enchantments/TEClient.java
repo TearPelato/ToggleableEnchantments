@@ -19,8 +19,8 @@ public class TEClient {
         if(mc.player == null) return;
         final var stack = mc.player.getMainHandItem();
         while(RegisterKeyMappings.TOGGLEABLE_MENU.consumeClick()) {
-            if(!(mc.screen instanceof TEScreen)) {
-                if(!stack.isEmpty()) mc.setScreen(new TEScreen());
+            if(!(mc.gui.screen() instanceof TEScreen)) {
+                if(!stack.isEmpty()) mc.gui.setScreen(new TEScreen());
             }
         }
         for(int i = 0; i < RegisterKeyMappings.GROUP_KEYS.size(); i++) {
