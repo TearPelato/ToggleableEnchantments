@@ -104,7 +104,8 @@ public class TEScreen extends Screen {
                     mouseX,
                     mouseY,
                     DefaultTooltipPositioner.INSTANCE,
-                    null
+                    null,
+                    false
             );
         }
 

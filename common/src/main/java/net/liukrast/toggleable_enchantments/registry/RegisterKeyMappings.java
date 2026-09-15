@@ -3,7 +3,6 @@ package net.liukrast.toggleable_enchantments.registry;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.liukrast.toggleable_enchantments.TEConstants;
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,18 +15,16 @@ public class RegisterKeyMappings {
 
     public static final KeyMapping TOGGLEABLE_MENU = new KeyMapping(
             "key.toggleable_enchantments.open_gui",
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_J,
+            InputConstants.Type.KEYBOARD,
+            InputConstants.KEY_J,
             MAIN_CATEGORY
-            //"key.categories.toggleable_enchantments"
     );
 
     public static final List<KeyMapping> GROUP_KEYS = IntStream.range(1, 10).mapToObj(i -> new KeyMapping(
             "key.toggleable_enchantments.group_" + i,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             320 + i,
             MAIN_CATEGORY
-            //"key.categories.toggleable_enchantments"
     )).collect(Collectors.toCollection(ArrayList::new));
 
     public static void register(Set<KeyMapping> keyMappings) {

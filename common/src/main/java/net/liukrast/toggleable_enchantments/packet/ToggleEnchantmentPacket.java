@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public record ToggleEnchantmentPacket(List<Identifier> enchantment, EquipmentSlot slot) implements CustomPacketPayload {
@@ -21,11 +21,11 @@ public record ToggleEnchantmentPacket(List<Identifier> enchantment, EquipmentSlo
     public static final StreamCodec<RegistryFriendlyByteBuf, ToggleEnchantmentPacket> CODEC = StreamCodec.ofMember(ToggleEnchantmentPacket::write, ToggleEnchantmentPacket::new);
 
     public ToggleEnchantmentPacket(RegistryFriendlyByteBuf buf) {
-        this(buf.readCollection(ArrayList::new, Identifier.STREAM_CODEC), fromInt(buf.readInt()));
+        this(Collections.singletonList(buf.readIdentifier()), fromInt(buf.readInt()));
     }
 
     public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeCollection(enchantment, Identifier.STREAM_CODEC);
+        buf.writeIdentifier(enchantment.getFirst());
         buf.writeInt(toInt(slot));
     }
 
@@ -52,7 +52,7 @@ public record ToggleEnchantmentPacket(List<Identifier> enchantment, EquipmentSlo
 
     public static void handle(ToggleEnchantmentPacket packet, Player ctx) {
         var enchantRegistry = ctx.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-        var list = packet.enchantment.stream().map(e -> ((Holder<Enchantment>)enchantRegistry.getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, e)))).filter(holder -> holder.is(TEConstants.WHITELIST) || !holder.is(TEConstants.BLACKLIST)).toList();
+        var list = packet.enchantment().stream().map(e -> ((Holder<Enchantment>)enchantRegistry.getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, e)))).filter(holder -> holder.is(TEConstants.WHITELIST) || !holder.is(TEConstants.BLACKLIST)).toList();
         ItemStack stack = ctx.getItemBySlot(packet.slot);
         if(!list.isEmpty()) TEConstants.toggleEnchantments(stack, list, ctx);
     }
