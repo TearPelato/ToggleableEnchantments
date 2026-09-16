@@ -27,12 +27,7 @@ public abstract class ItemStackMixin {
 
     @Inject(
             method = "addDetailsToTooltip",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/ItemStack;addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/item/component/TooltipDisplay;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
-                    ordinal = 16,
-                    shift = At.Shift.AFTER
-            )
+            at = @At("HEAD")
     )
     private void addDetailsToTooltip(Item.TooltipContext context, TooltipDisplay tooltipDisplay, Player player, TooltipFlag tooltipFlag, Consumer<Component> tooltipAdder, CallbackInfo ci) {
         addToTooltip(RegisterDataComponents.DISABLED_ENCHANTMENTS, context, tooltipDisplay, tooltipAdder, tooltipFlag);
